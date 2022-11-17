@@ -2,22 +2,30 @@
 
 ChipSlot::ChipSlot() {}
 
-bool ChipSlot::hasBlueChip() {
-  if (chip.getColor() == 'B')
+bool ChipSlot::hasPlayer1Chip() {
+  if (chip.getColor() == 'Y')
     return true;
   return false;
 }
 
-bool ChipSlot::hasRedChip() {
-  if (chip.getColor() == 'R')
+bool ChipSlot::hasPlayer2Chip() {
+  if (chip.getColor() == 'O')
     return true;
   return false;
 }
 
 bool ChipSlot::isEmpty() {
-  if (hasRedChip() || hasBlueChip())
+  if (hasPlayer1Chip() || hasPlayer2Chip())
     return false;
   return true;
+}
+
+void ChipSlot::addChipToSlot(Chip c) {
+  chip = c;
+}
+
+char ChipSlot::getChipColor() {
+  return chip.getColor();
 }
 
 Chip ChipSlot::getChip() {return chip;}
@@ -39,3 +47,73 @@ void ChipSlot::connectToRight(ChipSlot cs) {ptrRight = &cs;}
 void ChipSlot::connectToBottomLeft(ChipSlot cs) {ptrBottomLeft = &cs;}
 void ChipSlot::connectToBottomMid(ChipSlot cs) {ptrBottomMid = &cs;}
 void ChipSlot::connectToBottomRight(ChipSlot cs) {ptrBottomRight = &cs;}
+
+int ChipSlot::topLeftDirection(char color) {
+  int count = 0;
+  if (getTopLeft() == nullptr) {return 0;}
+  if (getTopLeft()->getChipColor() == color) {return 1 + topLeftDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::topMidDirection(char color) {
+  int count = 0;
+  if (getTopMid() == nullptr) {return 0;}
+  if (getTopMid()->getChipColor() == color) {return 1 + topMidDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::topRightDirection(char color) {
+  int count = 0;
+  if (getTopRight() == nullptr) {return 0;}
+  if (getTopRight()->getChipColor() == color) {return 1 + topRightDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::leftDirection(char color) {
+  int count = 0;
+  if (getLeft() == nullptr) {return 0;}
+  if (getLeft()->getChipColor() == color) {return 1 + leftDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::rightDirection(char color) {
+  int count = 0;
+  if (getRight() == nullptr) {return 0;}
+  if (getRight()->getChipColor() == color) {return 1 + rightDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::bottomLeftDirection(char color) {
+  int count = 0;
+  if (getBottomLeft() == nullptr) {return 0;}
+  if (getBottomLeft()->getChipColor() == color) {return 1 + bottomLeftDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::bottomMidDirection(char color) {
+  int count = 0;
+  if (getBottomMid() == nullptr) {return 0;}
+  if (getBottomMid()->getChipColor() == color) {return 1 + bottomMidDirection(color);}
+  else {return 0;}
+}
+int ChipSlot::bottomRightDirection(char color) {
+  int count = 0;
+  if (getBottomRight() == nullptr) {return 0;}
+  if (getBottomRight()->getChipColor() == color) {return 1 + bottomRightDirection(color);}
+  else {return 0;}
+}
+
+bool ChipSlot::fourConseqColors(char color) {
+  if (topLeftDirection(color) >= 4)
+    return true;
+  if (topMidDirection(color) >= 4)
+    return true;
+  if (topRightDirection(color) >= 4)
+    return true;
+  if (leftDirection(color) >= 4)
+    return true;
+  if (rightDirection(color) >= 4)
+    return true;
+  if (bottomLeftDirection(color) >= 4)
+    return true;
+  if (bottomMidDirection(color) >= 4)
+    return true;
+  if (bottomRightDirection(color) >= 4)
+    return true;
+  
+  return false;
+}

@@ -13,6 +13,10 @@ void Player::setupPlayer(std::string name, char c) {
   this->color = c;
 }
 
+std::string Player::getName() {
+  return name;
+}
+
 char Player::getColor() {
   return color;
 }
