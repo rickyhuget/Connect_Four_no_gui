@@ -22,16 +22,9 @@ int ChipTray::findLowestVacantRow(int col) {
 void ChipTray::insertChip(char color, int col) {
   Chip c(color);
   int row = findLowestVacantRow(col);
-  if (isYellow(color)) {
-    chipRack[row][col].addChipToSlot(c);
-  }
-  else if (isOrange(color)) {
-    chipRack[row][col].addChipToSlot(c);
-  }
-  else {
-     errorMessage("ChipTray::insertChip(char color, int row, int col)"); return;
-  }
-  _lastSlot =  &chipRack[row][col];
+  // <-- need to add exception for invalid row ***
+  chipRack[row][col].addChipToSlot(c);
+  _lastSlot = &chipRack[row][col];
 }
 
 //Display method
@@ -50,7 +43,7 @@ void ChipTray::displayRack() {
 
 // connect slot pointers methods
 void ChipTray::connectTopLeftCorner(int row, int column) {
-  chipRack[row][column].connectToRight(chipRack[row+1][column]);
+  chipRack[row][column].connectToRight(chipRack[row][column+1]);
   chipRack[row][column].connectToBottomMid(chipRack[row+1][column]);
   chipRack[row][column].connectToBottomRight(chipRack[row+1][column+1]);
 }
@@ -64,7 +57,7 @@ void ChipTray::connectTopRightCorner(int row, int column) {
 void ChipTray::connectBottomLeftCorner(int row, int column) {
   chipRack[ROWS-1][column].connectToTopMid(chipRack[row-1][column]);
   chipRack[ROWS-1][column].connectToTopRight(chipRack[row-1][column+1]);
-  chipRack[ROWS-1][column].connectToRight(chipRack[row+1][column]);
+  chipRack[ROWS-1][column].connectToRight(chipRack[row][column+1]);
 }
 
 void ChipTray::connectBottomRightCorner(int row, int column) {
@@ -76,7 +69,7 @@ void ChipTray::connectBottomRightCorner(int row, int column) {
 void ChipTray::connectLeftEdgeSlotPtrs(int i, int j) {
   chipRack[i][j].connectToTopMid(chipRack[i-1][j]);
   chipRack[i][j].connectToTopRight(chipRack[i-1][j+1]);
-  chipRack[i][j].connectToRight(chipRack[i+1][j]);
+  chipRack[i][j].connectToRight(chipRack[i][j+1]);
   chipRack[i][j].connectToBottomMid(chipRack[i+1][j]);
   chipRack[i][j].connectToBottomRight(chipRack[i+1][j+1]);
 }
@@ -91,7 +84,7 @@ void ChipTray::connectRightEdgeSlotPtrs(int i, int j) {
 
 void ChipTray::connectTopEdgeSlotPtrs(int i, int j) {
   chipRack[i][j].connectToLeft(chipRack[i][j-1]);
-  chipRack[i][j].connectToRight(chipRack[i+1][j]);
+  chipRack[i][j].connectToRight(chipRack[i][j+1]);
   chipRack[i][j].connectToBottomLeft(chipRack[i+1][j-1]);
   chipRack[i][j].connectToBottomMid(chipRack[i+1][j]);
   chipRack[i][j].connectToBottomRight(chipRack[i+1][j+1]);
@@ -102,7 +95,7 @@ void ChipTray::connectBottomEdgeSlotPtrs(int i, int j) {
   chipRack[i][j].connectToTopMid(chipRack[i-1][j]);
   chipRack[i][j].connectToTopRight(chipRack[i-1][j+1]);
   chipRack[i][j].connectToLeft(chipRack[i][j-1]);
-  chipRack[i][j].connectToRight(chipRack[i+1][j]);
+  chipRack[i][j].connectToRight(chipRack[i][j+1]);
 }
 
 void ChipTray::connectAllPtrs(int i, int j) {
@@ -110,7 +103,7 @@ void ChipTray::connectAllPtrs(int i, int j) {
   chipRack[i][j].connectToTopMid(chipRack[i-1][j]);
   chipRack[i][j].connectToTopRight(chipRack[i-1][j+1]);
   chipRack[i][j].connectToLeft(chipRack[i][j-1]);
-  chipRack[i][j].connectToRight(chipRack[i+1][j]);
+  chipRack[i][j].connectToRight(chipRack[i][j+1]);
   chipRack[i][j].connectToBottomLeft(chipRack[i+1][j-1]);
   chipRack[i][j].connectToBottomMid(chipRack[i+1][j]);
   chipRack[i][j].connectToBottomRight(chipRack[i+1][j+1]);
@@ -124,19 +117,14 @@ void ChipTray::connectInsideSlots() {
 }
 
 void ChipTray::connectEdgeSlots() {
-  for (int i = 1; i <= (ROWS-2); i++)
-    connectLeftEdgeSlotPtrs(i, 0);
-  for (int i = 1; i <= (ROWS-2); i++)
-    connectRightEdgeSlotPtrs(i, COLUMNS-1);
-  for (int i = 1; i <= (COLUMNS-2); i++)
-    connectTopEdgeSlotPtrs(0, i);
-  for (int i = 1; i <= (COLUMNS-2); i++)
-    connectBottomEdgeSlotPtrs(ROWS-1, i);
+  for (int i = 1; i <= (ROWS-2); i++) {connectLeftEdgeSlotPtrs(i, 0);}
+  for (int i = 1; i <= (ROWS-2); i++) {connectRightEdgeSlotPtrs(i, COLUMNS-1);}
+  for (int i = 1; i <= (COLUMNS-2); i++) {connectTopEdgeSlotPtrs(0, i);}
+  for (int i = 1; i <= (COLUMNS-2); i++) {connectBottomEdgeSlotPtrs(ROWS-1, i);}
 }
 
 void ChipTray::connectCornerSlots() {
-  int row, column;
-  row = 0; column = 0;
+  int row = 0; int column = 0;
   connectTopLeftCorner(row, column);
   row = 0; column = COLUMNS-1;
   connectTopRightCorner(row, column);

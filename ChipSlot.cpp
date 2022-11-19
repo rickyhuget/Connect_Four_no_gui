@@ -49,70 +49,57 @@ void ChipSlot::connectToBottomMid(ChipSlot cs) {ptrBottomMid = &cs;}
 void ChipSlot::connectToBottomRight(ChipSlot cs) {ptrBottomRight = &cs;}
 
 int ChipSlot::topLeftDirection(char color) {
-  int count = 0;
   if (getTopLeft() == nullptr) {return 0;}
-  if (getTopLeft()->getChipColor() == color) {return 1 + topLeftDirection(color);}
-  else {return 0;}
-}
-int ChipSlot::topMidDirection(char color) {
-  int count = 0;
-  if (getTopMid() == nullptr) {return 0;}
-  if (getTopMid()->getChipColor() == color) {return 1 + topMidDirection(color);}
+  if (getTopLeft()->getChipColor() == color) {return 1 + getTopLeft()->topLeftDirection(color);}
   else {return 0;}
 }
 int ChipSlot::topRightDirection(char color) {
-  int count = 0;
   if (getTopRight() == nullptr) {return 0;}
-  if (getTopRight()->getChipColor() == color) {return 1 + topRightDirection(color);}
+  if (getTopRight()->getChipColor() == color) {return 1 + getTopRight()->topRightDirection(color);}
   else {return 0;}
 }
 int ChipSlot::leftDirection(char color) {
-  int count = 0;
   if (getLeft() == nullptr) {return 0;}
-  if (getLeft()->getChipColor() == color) {return 1 + leftDirection(color);}
+  if (getLeft()->getChipColor() == color) {return 1 + getLeft()->leftDirection(color);}
   else {return 0;}
 }
 int ChipSlot::rightDirection(char color) {
-  int count = 0;
-  if (getRight() == nullptr) {return 0;}
-  if (getRight()->getChipColor() == color) {return 1 + rightDirection(color);}
-  else {return 0;}
+  if (getRight() == nullptr) {return 0;} 
+  if (getRight()->getChipColor() == color) {return 1 + getRight()->rightDirection(color);}
+  else {return 0;} 
 }
 int ChipSlot::bottomLeftDirection(char color) {
-  int count = 0;
   if (getBottomLeft() == nullptr) {return 0;}
-  if (getBottomLeft()->getChipColor() == color) {return 1 + bottomLeftDirection(color);}
+  if (getBottomLeft()->getChipColor() == color) {return 1 + getBottomLeft()->bottomLeftDirection(color);}
   else {return 0;}
 }
+
 int ChipSlot::bottomMidDirection(char color) {
-  int count = 0;
-  if (getBottomMid() == nullptr) {return 0;}
-  if (getBottomMid()->getChipColor() == color) {return 1 + bottomMidDirection(color);}
+  if (getBottomMid() == nullptr) {return 0;} 
+  if (getBottomMid()->getChipColor() == color) {return (1 + getBottomMid()->bottomMidDirection(color));}
   else {return 0;}
 }
+
 int ChipSlot::bottomRightDirection(char color) {
-  int count = 0;
   if (getBottomRight() == nullptr) {return 0;}
-  if (getBottomRight()->getChipColor() == color) {return 1 + bottomRightDirection(color);}
+  if (getBottomRight()->getChipColor() == color) {return 1 + getBottomRight()->bottomRightDirection(color);}
   else {return 0;}
 }
 
 bool ChipSlot::fourConseqColors(char color) {
-  if (topLeftDirection(color) >= 4)
+  if (topLeftDirection(color) >= 3)
     return true;
-  if (topMidDirection(color) >= 4)
+  if (topRightDirection(color) >= 3)
     return true;
-  if (topRightDirection(color) >= 4)
+  if (leftDirection(color) >= 3)
     return true;
-  if (leftDirection(color) >= 4)
+  if (rightDirection(color) >= 3)
     return true;
-  if (rightDirection(color) >= 4)
+  if (bottomLeftDirection(color) >= 3)
     return true;
-  if (bottomLeftDirection(color) >= 4)
+  if (bottomMidDirection(color) >= 3)
     return true;
-  if (bottomMidDirection(color) >= 4)
-    return true;
-  if (bottomRightDirection(color) >= 4)
+  if (bottomRightDirection(color) >= 3)
     return true;
   
   return false;
